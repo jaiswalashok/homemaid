@@ -21,22 +21,9 @@ export const storage = getStorage(app);
 
 export async function ensureAuth(): Promise<User | null> {
   return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       unsubscribe();
-      if (user) {
-        resolve(user);
-      } else {
-        try {
-          const email = process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMAIL || "";
-          const password = process.env.NEXT_PUBLIC_FIREBASE_AUTH_PASSWORD || "";
-          const cred = await signInWithEmailAndPassword(auth, email, password);
-          console.log("Firebase: signed in as", cred.user.email);
-          resolve(cred.user);
-        } catch (err) {
-          console.error("Firebase auth failed:", err);
-          resolve(null);
-        }
-      }
+      resolve(user);
     });
   });
 }

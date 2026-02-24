@@ -101,7 +101,7 @@ export default function LandingPage() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
               <span className="text-3xl">🍲</span>
-              <span className="text-xl font-bold text-gray-900 tracking-tight">HomeBuddy</span>
+              <span className="text-xl font-bold text-gray-900 tracking-tight">HomeMaid</span>
             </div>
             <div className="flex items-center gap-3">
               <Link
@@ -190,7 +190,7 @@ export default function LandingPage() {
               Everything your home needs
             </h2>
             <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-              From AI-generated recipes to smart expense tracking, HomeBuddy has you covered.
+              From AI-generated recipes to smart expense tracking, HomeMaid has you covered.
             </p>
           </div>
 
@@ -310,7 +310,7 @@ export default function LandingPage() {
             Ready to simplify your home life?
           </h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Join families who use HomeBuddy to manage recipes, tasks, groceries, and expenses — all powered by AI.
+            Join families who use HomeMaid to manage recipes, tasks, groceries, and expenses — all powered by AI.
           </p>
           <Link
             href="/login?mode=signup"
@@ -328,14 +328,14 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl">🍲</span>
-              <span className="text-lg font-bold text-white">HomeBuddy</span>
+              <span className="text-lg font-bold text-white">HomeMaid</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-gray-400">
               <a href="#features" className="hover:text-white transition-colors">Features</a>
               <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
               <Link href="/login" className="hover:text-white transition-colors">Login</Link>
             </div>
-            <p className="text-sm text-gray-500">© 2026 HomeBuddy. All rights reserved.</p>
+            <p className="text-sm text-gray-500">© 2026 HomeMaid by Jaiswals Family. All rights reserved.</p>
           </div>
         </div>
       </footer>

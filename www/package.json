@@ -1,6 +1,6 @@
 {
-  "name": "annapurna",
-  "version": "0.1.0",
+  "name": "homemaid",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
