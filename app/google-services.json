@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "37849751232",
+    "project_id": "recipebook-1a8d7",
+    "storage_bucket": "recipebook-1a8d7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37849751232:android:f1b6c3d48301f1a4039725",
+        "android_client_info": {
+          "package_name": "com.ashokjaiswal.homehelp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37849751232-vcktaqi606ra5rl52e1vkl3rslacbja5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUM4uKMwzw71a7VIRRWXgSazbjL8gxFWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37849751232-vcktaqi606ra5rl52e1vkl3rslacbja5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "37849751232-j6jvm6uk4756i1mupooapp2isa7obg8q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ashokjaiswal.home"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

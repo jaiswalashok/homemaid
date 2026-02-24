@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "HomeHelp",
+    "slug": "homehelp",
+    "scheme": "com.ashokjaiswal.home",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4A90E2"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ashokjaiswal.home",
+      "usesAppleSignIn": true,
+      "googleServicesFile": "./GoogleService-Info.plist"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#4A90E2"
+      },
+      "package": "com.ashokjaiswal.homehelp",
+      "googleServicesFile": "./google-services.json",
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-web-browser",
+      "expo-font",
+      "expo-apple-authentication",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "HomeHelp needs access to your photos to scan receipts.",
+          "cameraPermission": "HomeHelp needs access to your camera to scan receipts."
+        }
+      ]
+    ],
+    "extra": {
+      "firebaseApiKey": "AIzaSyDDrlOXgU4_X7omqnTyugYjoGlltjahz0E",
+      "firebaseAuthDomain": "recipebook-1a8d7.firebaseapp.com",
+      "firebaseProjectId": "recipebook-1a8d7",
+      "firebaseStorageBucket": "recipebook-1a8d7.firebasestorage.app",
+      "firebaseMessagingSenderId": "37849751232",
+      "firebaseAppId": "1:37849751232:web:e44a74d369181778039725",
+      "firebaseMeasurementId": "G-YJ8MERM2CB",
+      "googleIosClientId": "",
+      "apiBaseUrl": "http://localhost:3000"
+    }
+  }
+}
