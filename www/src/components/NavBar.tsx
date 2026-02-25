@@ -9,7 +9,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const NAV_ITEMS = [
   { href: "/recipes", icon: UtensilsCrossed, labelEn: "Recipes", labelHi: "रेसिपी" },
-  { href: "/", icon: ListChecks, labelEn: "Tasks", labelHi: "कार्य" },
+  { href: "/tasks", icon: ListChecks, labelEn: "Tasks", labelHi: "कार्य" },
   { href: "/expenses", icon: Receipt, labelEn: "Expenses", labelHi: "खर्च" },
   { href: "/grocery", icon: ShoppingCart, labelEn: "Grocery", labelHi: "किराना" },
 ];

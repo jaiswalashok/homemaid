@@ -11,10 +11,13 @@ import {
   OAuthProvider,
   signOut as firebaseSignOut,
   updateProfile,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import { UserProfile, SubscriptionTier } from "./subscription";
+import { createAvatar } from '@dicebear/core';
+import { initials } from '@dicebear/collection';
 
 interface AuthContextType {
   user: User | null;
@@ -26,6 +29,7 @@ interface AuthContextType {
   signInWithApple: () => Promise<User>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -38,9 +42,21 @@ const AuthContext = createContext<AuthContextType>({
   signInWithApple: async () => { throw new Error("Not initialized"); },
   signOut: async () => {},
   refreshProfile: async () => {},
+  resetPassword: async () => { throw new Error("Not initialized"); },
 });
 
 export const useAuth = () => useContext(AuthContext);
+
+// Generate avatar URL using DiceBear
+function generateAvatarUrl(name: string, email: string): string {
+  const seed = name || email;
+  const avatar = createAvatar(initials, {
+    seed,
+    backgroundColor: ['b6e3f4', 'c0aede', 'd1d4f9', 'ffd5dc', 'ffdfbf'],
+    fontSize: 40,
+  });
+  return avatar.toDataUri();
+}
 
 async function getOrCreateProfile(user: User): Promise<UserProfile> {
   const ref = doc(db, "users", user.uid);
@@ -50,12 +66,15 @@ async function getOrCreateProfile(user: User): Promise<UserProfile> {
     return snap.data() as UserProfile;
   }
 
+  // Generate avatar if user doesn't have one
+  const photoURL = user.photoURL || generateAvatarUrl(user.displayName || '', user.email || '');
+
   // Create new profile for first-time users
   const newProfile: UserProfile = {
     uid: user.uid,
     email: user.email || "",
     displayName: user.displayName || "",
-    photoURL: user.photoURL || undefined,
+    photoURL: photoURL,
     emailVerified: user.emailVerified,
     tier: "free" as SubscriptionTier,
     familyMembers: [
@@ -149,6 +168,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(null);
   };
 
+  const resetPassword = async (email: string): Promise<void> => {
+    await sendPasswordResetEmail(auth, email);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -161,6 +184,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signInWithApple,
         signOut,
         refreshProfile,
+        resetPassword,
       }}
     >
       {children}

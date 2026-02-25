@@ -76,7 +76,7 @@ npm start
 
 ### Vercel (Web)
 
-The web application is deployed on Vercel at [homemaid.jaiswals.live](https://homemaid.jaiswals.live)
+The web application is deployed on Vercel at [jaiswals.live](https://jaiswals.live)
 
 To deploy:
 1. Connect your GitHub repository to Vercel
@@ -126,7 +126,7 @@ See `.env.example` for required environment variables including:
 
 ## 🤝 Support
 
-For support, email us at [ashok@homemaid.jaiswals.live](mailto:ashok@homemaid.jaiswals.live)
+For support, email us at [ashok@jaiswals.live](mailto:ashok@jaiswals.live)
 
 ## 📝 License
 

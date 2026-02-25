@@ -5,8 +5,8 @@
   "framework": "nextjs",
   "regions": ["iad1"],
   "env": {
-    "NEXT_PUBLIC_APP_URL": "https://homemaid.jaiswals.live",
+    "NEXT_PUBLIC_APP_URL": "https://jaiswals.live",
     "NEXT_PUBLIC_APP_NAME": "HomeMaid",
-    "NEXT_PUBLIC_SUPPORT_EMAIL": "ashok@homemaid.jaiswals.live"
+    "NEXT_PUBLIC_SUPPORT_EMAIL": "ashok@jaiswals.live"
   }
 }

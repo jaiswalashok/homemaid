@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://homemaid.jaiswals.live' : undefined,
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://jaiswals.live' : undefined,
   basePath: process.env.NODE_ENV === 'production' ? '' : undefined,
 };
 

@@ -15,7 +15,7 @@ This guide will help you push the HomeMaid project to the GitHub repository unde
 ```bash
 # Set your git user for this repository
 git config user.name "jaiswalashok"
-git config user.email "ashok@homemaid.jaiswals.live"
+git config user.email "ashok@jaiswals.live"
 
 # Verify the configuration
 git config user.name
@@ -79,7 +79,7 @@ git push -u origin main
 
 1. Generate SSH key:
 ```bash
-ssh-keygen -t ed25519 -C "ashok@homemaid.jaiswals.live"
+ssh-keygen -t ed25519 -C "ashok@jaiswals.live"
 ```
 
 2. Add SSH key to GitHub account
@@ -116,9 +116,9 @@ git log --oneline
 
 1. Configure Vercel deployment
 2. Set up environment variables in Vercel
-3. Connect custom domain: homemaid.jaiswals.live
+3. Connect custom domain: jaiswals.live
 4. Enable automatic deployments from main branch
 
 ---
 
-**Need help?** Contact ashok@homemaid.jaiswals.live
+**Need help?** Contact ashok@jaiswals.live

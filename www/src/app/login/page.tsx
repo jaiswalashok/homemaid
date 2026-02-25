@@ -13,14 +13,16 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import { auth } from "@/lib/firebase";
+import { updateProfile } from "firebase/auth";
 import toast from "react-hot-toast";
 
-type AuthMode = "login" | "signup" | "verify";
+type AuthMode = "login" | "signup" | "verify" | "forgot-password";
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, signIn, signUp, signInWithGoogle, signInWithApple } = useAuth();
+  const { user, signIn, signUp, signInWithGoogle, signInWithApple, resetPassword } = useAuth();
 
   const [mode, setMode] = useState<AuthMode>(
     searchParams.get("mode") === "signup" ? "signup" : "login"
@@ -32,6 +34,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sendingCode, setSendingCode] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
 
   // Redirect if already logged in
   useEffect(() => {
@@ -79,7 +82,7 @@ export default function LoginPage() {
       const verifyData = await verifyRes.json();
       if (!verifyRes.ok) throw new Error(verifyData.error || "Invalid code");
 
-      // Create account
+      // Code verified! Now create the account with email/password
       await signUp(email, password, displayName);
 
       // Send welcome email
@@ -89,7 +92,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, name: displayName }),
       }).catch(() => {}); // fire and forget
 
-      toast.success("Account created! Welcome to HomeBuddy!");
+      toast.success("Account created! Welcome to HomeMaid!");
       router.push("/");
     } catch (err: any) {
       toast.error(err.message || "Failed to create account");
@@ -148,20 +151,40 @@ export default function LoginPage() {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!resetEmail.trim()) {
+      toast.error("Please enter your email");
+      return;
+    }
+    setLoading(true);
+    try {
+      await resetPassword(resetEmail);
+      toast.success("Password reset email sent! Check your inbox.");
+      setMode("login");
+      setResetEmail("");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to send reset email");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <a href="/landing" className="inline-flex items-center gap-2 mb-6">
-            <span className="text-4xl">🍲</span>
-            <span className="text-2xl font-bold text-gray-900">HomeBuddy</span>
+            <img src="/assets/logo.png" alt="HomeMaid" className="w-12 h-12" />
+            <span className="text-2xl font-bold text-gray-900">HomeMaid</span>
           </a>
           <h1 className="text-2xl font-bold text-gray-900">
             {mode === "verify"
               ? "Verify your email"
               : mode === "signup"
               ? "Create your account"
+              : mode === "forgot-password"
+              ? "Reset your password"
               : "Welcome back"}
           </h1>
           <p className="text-sm text-gray-500 mt-2">
@@ -169,7 +192,9 @@ export default function LoginPage() {
               ? `We sent a 4-digit code to ${email}`
               : mode === "signup"
               ? "Start managing your home with AI"
-              : "Sign in to your HomeBuddy account"}
+              : mode === "forgot-password"
+              ? "Enter your email to receive a password reset link"
+              : "Sign in to your HomeMaid account"}
           </p>
         </div>
 
@@ -223,6 +248,48 @@ export default function LoginPage() {
                 className="w-full text-sm text-gray-500 hover:text-orange-600 transition-colors"
               >
                 {sendingCode ? "Sending..." : "Didn't receive it? Resend code"}
+              </button>
+            </div>
+          ) : mode === "forgot-password" ? (
+            /* Forgot Password Form */
+            <div className="space-y-5">
+              <button
+                onClick={() => setMode("login")}
+                className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Back to login
+              </button>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={handleForgotPassword}
+                disabled={loading || !resetEmail.trim()}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-colors disabled:opacity-50"
+              >
+                {loading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    Send Reset Link
+                    <Mail className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </div>
           ) : (
@@ -322,6 +389,15 @@ export default function LoginPage() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+                {mode === "login" && (
+                  <button
+                    type="button"
+                    onClick={() => setMode("forgot-password")}
+                    className="text-xs text-orange-600 hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                )}
               </div>
 
               {mode === "login" ? (

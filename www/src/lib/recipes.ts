@@ -6,6 +6,7 @@ import {
   doc,
   getDocs,
   query,
+  where,
   orderBy,
   serverTimestamp,
   Timestamp,
@@ -61,8 +62,12 @@ function normalizeRecipe(raw: any): Omit<Recipe, "id"> {
 }
 
 export async function getAllRecipes(): Promise<Recipe[]> {
-  await requireAuth();
-  const q = query(collection(db, COLLECTION), orderBy("createdAt", "desc"));
+  const user = await requireAuth();
+  const q = query(
+    collection(db, COLLECTION),
+    where("userId", "==", user.uid),
+    orderBy("createdAt", "desc")
+  );
   const snapshot = await getDocs(q);
   return snapshot.docs.map((d) => ({
     id: d.id,

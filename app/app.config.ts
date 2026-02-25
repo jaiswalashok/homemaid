@@ -4,9 +4,9 @@ const API_BASE = process.env.API_BASE_URL || 'http://localhost:3000';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: 'HomeHelp',
-  slug: 'homehelp',
-  scheme: 'homehelp',
+  name: 'HomeMaid',
+  slug: 'homemaid',
+  scheme: 'homemaid',
   version: '1.0.0',
   runtimeVersion: {
     policy: 'appVersion',
@@ -22,7 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.homehelp.app',
+    bundleIdentifier: 'live.jaiswals.homemaid',
     buildNumber: '1',
     usesAppleSignIn: true,
   },
@@ -31,7 +31,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#4A90E2',
     },
-    package: 'com.homehelp.app',
+    package: 'live.jaiswals.homemaid',
     versionCode: 1,
   },
   web: {
@@ -44,8 +44,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-image-picker',
       {
-        photosPermission: 'HomeHelp needs access to your photos to scan receipts.',
-        cameraPermission: 'HomeHelp needs access to your camera to scan receipts.',
+        photosPermission: 'HomeMaid needs access to your photos to scan receipts.',
+        cameraPermission: 'HomeMaid needs access to your camera to scan receipts.',
       },
     ],
   ],

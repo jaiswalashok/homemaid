@@ -100,7 +100,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
-              <span className="text-3xl">🍲</span>
+              <img src="/assets/logo.png" alt="HomeMaid" className="w-10 h-10" />
               <span className="text-xl font-bold text-gray-900 tracking-tight">HomeMaid</span>
             </div>
             <div className="flex items-center gap-3">
@@ -327,7 +327,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">🍲</span>
+              <img src="/assets/logo.png" alt="HomeMaid" className="w-8 h-8" />
               <span className="text-lg font-bold text-white">HomeMaid</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-gray-400">

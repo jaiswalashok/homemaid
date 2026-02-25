@@ -1,0 +1,55 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Email verification codes - allow public read/write for verification flow
+    match /emailVerifications/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // User profiles - only authenticated users can read/write their own data
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write, create: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Tasks - only authenticated users can read/write their own tasks
+    match /tasks/{taskId} {
+      allow read: if request.auth != null && (
+        resource == null || resource.data.userId == request.auth.uid
+      );
+      allow write: if request.auth != null && (
+        resource == null || resource.data.userId == request.auth.uid
+      );
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Daily task templates - only authenticated users can read/write their own templates
+    match /dailyTaskTemplates/{templateId} {
+      allow read: if request.auth != null && (
+        resource == null || resource.data.userId == request.auth.uid
+      );
+      allow write: if request.auth != null && (
+        resource == null || resource.data.userId == request.auth.uid
+      );
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Recipes - only authenticated users can read/write their own recipes
+    match /recipes/{recipeId} {
+      allow read: if request.auth != null && (
+        resource == null || resource.data.userId == request.auth.uid
+      );
+      allow write: if request.auth != null && (
+        resource == null || resource.data.userId == request.auth.uid
+      );
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

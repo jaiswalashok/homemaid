@@ -22,6 +22,7 @@ import { useLanguage } from "@/lib/language-context";
 import { useAuth } from "@/lib/auth-context";
 import {
   Task,
+  TaskStatus,
   getTodayString,
   getTasksForDate,
   onTasksForDate,
@@ -100,8 +101,7 @@ export default function DashboardPage() {
     if (!user) return;
     const newStatus = currentStatus === "completed" ? "pending" : "completed";
     try {
-      const today = getTodayString();
-      await updateTaskStatus(today, taskId, newStatus);
+      await updateTaskStatus(taskId, newStatus as TaskStatus);
       if (newStatus === "completed") {
         playBeep();
         toast.success(t("taskCompleted"));
@@ -115,8 +115,7 @@ export default function DashboardPage() {
   const handleDeleteTask = async (taskId: string) => {
     if (!user) return;
     try {
-      const today = getTodayString();
-      await deleteTask(today, taskId);
+      await deleteTask(taskId);
       toast.success(t("taskDeleted"));
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -185,7 +184,7 @@ export default function DashboardPage() {
             className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
           >
             <Settings className="w-4 h-4" />
-            {t("editDailyTasks")}
+            {t("Edit Recurring Tasks")}
           </button>
         </div>
 
@@ -197,7 +196,7 @@ export default function DashboardPage() {
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleAddTask()}
-              placeholder={t("addNewTask")}
+              placeholder={t("Start typing to add a task e.g. Prepare lunch box")}
               className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <button
@@ -316,13 +315,13 @@ export default function DashboardPage() {
 
         {tasks.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">{t("noTasksYet")}</p>
+            <p className="text-gray-500">{t("No tasks found, start with 'Add New Task' above")}</p>
           </div>
         )}
       </div>
 
       {showEditDialog && (
-        <EditDailyTasksDialog onClose={() => setShowEditDialog(false)} />
+        <EditDailyTasksDialog open={showEditDialog} onClose={() => setShowEditDialog(false)} />
       )}
     </div>
   );

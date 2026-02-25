@@ -163,8 +163,8 @@ export default function TermsOfUse() {
             </p>
             <div className="bg-gray-100 p-4 rounded-lg mb-6">
               <p className="text-gray-700">
-                <strong>Email:</strong> ashok@homemaid.jaiswals.live<br />
-                <strong>Website:</strong> homemaid.jaiswals.live<br />
+                <strong>Email:</strong> ashok@jaiswals.live<br />
+                <strong>Website:</strong> jaiswals.live<br />
                 <strong>Company:</strong> HomeMaid by Jaiswals Family
               </p>
             </div>

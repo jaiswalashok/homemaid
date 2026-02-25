@@ -121,8 +121,8 @@ export interface DailyTaskTemplate {
 
 // Get all daily task templates from Firestore
 export async function getDailyTaskTemplates(): Promise<DailyTaskTemplate[]> {
-  await requireAuth();
-  const q = query(collection(db, TEMPLATES_COLLECTION));
+  const user = await requireAuth();
+  const q = query(collection(db, TEMPLATES_COLLECTION), where("userId", "==", user.uid));
   const snapshot = await getDocs(q);
   const templates = snapshot.docs.map((d) => ({
     id: d.id,
@@ -133,7 +133,7 @@ export async function getDailyTaskTemplates(): Promise<DailyTaskTemplate[]> {
 
 // Seed the templates collection with defaults (run once)
 export async function seedDailyTaskTemplates(): Promise<boolean> {
-  await requireAuth();
+  const user = await requireAuth();
   const existing = await getDailyTaskTemplates();
   if (existing.length > 0) return false; // already seeded
 
@@ -144,6 +144,7 @@ export async function seedDailyTaskTemplates(): Promise<boolean> {
       title,
       order: idx + 1,
       enabled: true,
+      userId: user.uid,
     });
   });
   await batch.commit();
@@ -162,13 +163,14 @@ export async function addDailyTaskTemplate(
     recipeId?: string;
   }
 ): Promise<string> {
-  await requireAuth();
+  const user = await requireAuth();
   const templates = await getDailyTaskTemplates();
   const maxOrder = templates.length > 0 ? Math.max(...templates.map((t) => t.order)) : 0;
   const docRef = await addDoc(collection(db, TEMPLATES_COLLECTION), {
     title,
     order: maxOrder + 1,
     enabled: true,
+    userId: user.uid,
     recurrence: options?.recurrence || "daily",
     ...(options?.dayOfWeek !== undefined && { dayOfWeek: options.dayOfWeek }),
     ...(options?.dayOfMonth !== undefined && { dayOfMonth: options.dayOfMonth }),
@@ -196,9 +198,10 @@ export async function deleteDailyTaskTemplate(id: string): Promise<void> {
 
 // Get all tasks for a specific date
 export async function getTasksForDate(date: string): Promise<Task[]> {
-  await requireAuth();
+  const user = await requireAuth();
   const q = query(
     collection(db, COLLECTION),
+    where("userId", "==", user.uid),
     where("date", "==", date)
   );
   const snapshot = await getDocs(q);
@@ -215,8 +218,11 @@ export function onTasksForDate(
   date: string,
   callback: (tasks: Task[]) => void
 ): Unsubscribe {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Must be signed in");
   const q = query(
     collection(db, COLLECTION),
+    where("userId", "==", user.uid),
     where("date", "==", date)
   );
   return onSnapshot(q, (snapshot) => {
@@ -237,9 +243,10 @@ export function onTasksForDate(
 // Get incomplete non-daily tasks from previous days (carry over)
 // Uses simple query + client-side filtering to avoid composite index
 export async function getCarryOverTasks(today: string): Promise<Task[]> {
-  await requireAuth();
+  const user = await requireAuth();
   const q = query(
     collection(db, COLLECTION),
+    where("userId", "==", user.uid),
     where("isDaily", "==", false)
   );
   const snapshot = await getDocs(q);
