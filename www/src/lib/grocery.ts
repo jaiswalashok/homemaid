@@ -6,6 +6,7 @@ import {
   doc,
   getDocs,
   query,
+  where,
   serverTimestamp,
   Timestamp,
 } from "firebase/firestore";
@@ -32,8 +33,8 @@ async function requireAuth() {
 }
 
 export async function getAllGroceries(): Promise<GroceryItem[]> {
-  await requireAuth();
-  const q = query(collection(db, COLLECTION));
+  const user = await requireAuth();
+  const q = query(collection(db, COLLECTION), where("userId", "==", user.uid));
   const snapshot = await getDocs(q);
   const items = snapshot.docs.map((d) => ({
     id: d.id,
