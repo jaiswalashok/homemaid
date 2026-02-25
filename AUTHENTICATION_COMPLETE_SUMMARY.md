@@ -60,7 +60,7 @@
 
 ### Step 2: Configure Resend Email Domain
 
-**Current Issue:** Domain `homebuddy.app` is not verified
+**Current Issue:** Domain `HomeMaid.app` is not verified
 
 **Solution Options:**
 

@@ -36,7 +36,7 @@
   - Fixed `updateTaskStatus` call (removed extra parameter)
   - Fixed `deleteTask` call (removed extra parameter)
   - Added `open` prop to `EditDailyTasksDialog`
-- ✅ Updated branding from HomeBuddy to HomeMaid throughout
+- ✅ Updated branding from HomeMaid to HomeMaid throughout
 
 ### 5. **Environment Configuration**
 - ✅ Centralized `.env` file in root
@@ -143,7 +143,7 @@ HomeMaid/
 ### 1. Resend Email Domain Not Verified
 **Error seen in logs:**
 ```
-The homebuddy.app domain is not verified
+The HomeMaid.app domain is not verified
 ```
 
 **Solution:** 

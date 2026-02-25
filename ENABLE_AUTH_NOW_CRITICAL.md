@@ -71,7 +71,7 @@ pnpm dev
 
 You may still see this warning in logs:
 ```
-The homebuddy.app domain is not verified
+The HomeMaid.app domain is not verified
 ```
 
 **This is separate from Firebase auth errors.**

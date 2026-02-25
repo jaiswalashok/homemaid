@@ -11,7 +11,7 @@
 - ✅ Firebase configuration working (homemaid-f7a6e project)
 
 ### 2. Branding Updates
-- ✅ Changed all references from HomeBuddy/HomeHelp/Annapurna to **HomeMaid**
+- ✅ Changed all references from HomeMaid/HomeHelp/Annapurna to **HomeMaid**
 - ✅ Updated package.json files (both web and mobile)
 - ✅ Updated bundle identifiers to `live.jaiswals.homemaid`
 - ✅ Updated landing page footer to "© 2026 HomeMaid by Jaiswals Family"

@@ -17,25 +17,25 @@ export async function POST(req: NextRequest) {
     // Send welcome email using Resend
     try {
       const { data, error } = await resend.emails.send({
-        from: 'HomeBuddy <noreply@homebuddy.app>',
+        from: 'HomeMaid <noreply@HomeMaid.app>',
         to: [email],
-        subject: 'Welcome to HomeBuddy! 🏠',
+        subject: 'Welcome to HomeMaid! 🏠',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #4A90E2; margin: 0;">HomeBuddy</h1>
+              <h1 style="color: #4A90E2; margin: 0;">HomeMaid</h1>
               <p style="color: #666; margin: 5px 0;">Your Smart Home Assistant</p>
             </div>
             
             <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin-bottom: 20px;">
-              <h2 style="color: #333; margin: 0 0 10px 0;">Welcome to HomeBuddy! 🎉</h2>
+              <h2 style="color: #333; margin: 0 0 10px 0;">Welcome to HomeMaid! 🎉</h2>
               <p style="color: #666; margin: 0 0 20px 0;">
                 Hi ${name},<br>
                 Welcome to your new smart home assistant! We're excited to help you manage your household more efficiently.
               </p>
               
               <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h3 style="color: #4A90E2; margin: 0 0 15px 0;">What you can do with HomeBuddy:</h3>
+                <h3 style="color: #4A90E2; margin: 0 0 15px 0;">What you can do with HomeMaid:</h3>
                 <ul style="color: #666; margin: 0; padding-left: 20px;">
                   <li style="margin-bottom: 8px;">🍳 <strong>AI Recipe Creation</strong> - Describe any dish and get detailed recipes</li>
                   <li style="margin-bottom: 8px;">📝 <strong>Smart Task Management</strong> - Organize your household tasks efficiently</li>
@@ -47,14 +47,14 @@ export async function POST(req: NextRequest) {
               
               <div style="text-align: center; margin: 30px 0;">
                 <a href="#" style="background: #4A90E2; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
-                  Open HomeBuddy App
+                  Open HomeMaid App
                 </a>
               </div>
             </div>
             
             <div style="text-align: center; color: #999; font-size: 12px;">
               <p>Need help? Reply to this email and we'll assist you!</p>
-              <p>© 2026 HomeBuddy. All rights reserved.</p>
+              <p>© 2026 HomeMaid. All rights reserved.</p>
             </div>
           </div>
         `,

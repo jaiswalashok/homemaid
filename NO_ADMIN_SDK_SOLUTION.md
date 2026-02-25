@@ -156,7 +156,7 @@ Email Signup Flow (No Admin SDK):
 ## 🐛 Known Issues
 
 ### Resend Domain Not Verified
-**Error:** `The homebuddy.app domain is not verified`
+**Error:** `The HomeMaid.app domain is not verified`
 
 **Solution:**
 1. Go to https://resend.com/domains
