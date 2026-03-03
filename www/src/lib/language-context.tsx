@@ -41,6 +41,40 @@ export const UI_LABELS: Record<Language, Record<string, string>> = {
     stopListening: "Stop",
     language: "Language",
     search: "Search recipes...",
+    // Dashboard and Tasks
+    addNewTask: "Add a new task...",
+    today: "Today",
+    upcoming: "Upcoming",
+    completed: "Completed",
+    taskCompleted: "Task completed!",
+    errorUpdatingTask: "Error updating task",
+    errorDeletingTask: "Error deleting task",
+    taskDeleted: "Task deleted",
+    editDailyTasks: "Edit Daily Tasks",
+    // Expenses
+    addExpense: "Add Expense",
+    amount: "Amount",
+    vendor: "Vendor",
+    paymentMethod: "Payment Method",
+    date: "Date",
+    // Grocery
+    addGroceries: "Add groceries... (e.g. milk, eggs, bread)",
+    // General
+    loading: "Loading...",
+    error: "Error",
+    success: "Success",
+    // Auth
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    signOut: "Sign Out",
+    email: "Email",
+    password: "Password",
+    name: "Name",
+    // Settings
+    profile: "Profile",
+    settings: "Settings",
+    account: "Account",
+    subscription: "Subscription",
   },
   Hindi: {
     appName: "अन्नपूर्णा",
@@ -65,6 +99,40 @@ export const UI_LABELS: Record<Language, Record<string, string>> = {
     stopListening: "रुकें",
     language: "भाषा",
     search: "रेसिपी खोजें...",
+    // Dashboard and Tasks
+    addNewTask: "नया कार्य जोड़ें...",
+    today: "आज",
+    upcoming: "आने वाले",
+    completed: "पूर्ण हुए",
+    taskCompleted: "कार्य पूर्ण हुआ!",
+    errorUpdatingTask: "कार्य अपडेट में त्रुटि",
+    errorDeletingTask: "कार्य हटाने में त्रुटि",
+    taskDeleted: "कार्य हटाया गया",
+    editDailyTasks: "दैनिक कार्य संपादित करें",
+    // Expenses
+    addExpense: "खर्च जोड़ें",
+    amount: "राशि",
+    vendor: "विक्रेता",
+    paymentMethod: "भुगतान विधि",
+    date: "तिथि",
+    // Grocery
+    addGroceries: "किराना सामान जोड़ें... (जैसे: दूध, अंडे, ब्रेड)",
+    // General
+    loading: "लोड हो रहा है...",
+    error: "त्रुटि",
+    success: "सफलता",
+    // Auth
+    signIn: "साइन इन",
+    signUp: "साइन अप",
+    signOut: "साइन आउट",
+    email: "ईमेल",
+    password: "पासवर्ड",
+    name: "नाम",
+    // Settings
+    profile: "प्रोफाइल",
+    settings: "सेटिंग्स",
+    account: "खाता",
+    subscription: "सदस्यता",
   },
 };
 

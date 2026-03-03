@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   User,
@@ -36,7 +36,7 @@ const TIER_COLORS: Record<SubscriptionTier, { badge: string; progress: string }>
   premium: { badge: "bg-purple-100 text-purple-700", progress: "bg-purple-500" },
 };
 
-export default function SettingsPage() {
+function SettingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, profile, signOut, refreshProfile } = useAuth();
@@ -327,5 +327,13 @@ export default function SettingsPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><Loader2 className="animate-spin" /></div>}>
+      <SettingsContent />
+    </Suspense>
   );
 }

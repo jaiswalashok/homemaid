@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { aiService } from "./ai-service";
 
 const genAI = new GoogleGenerativeAI(
   process.env.NEXT_PUBLIC_GEMINI_API_KEY || ""
@@ -110,22 +111,22 @@ If you can't read something, make your best guess. Always return valid JSON.`;
 
 // Format grocery items with emoji using Gemini
 export async function formatGroceryItems(text: string): Promise<string[]> {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-  const prompt = `You are a helpful home assistant. The user wants to add grocery items. Parse their message and return each item as a separate entry with a relevant emoji prefix.
-
-User message: "${text}"
-
-Return ONLY a JSON array of strings, each item formatted like "🥛 2L Milk", "🥚 1 Dozen Eggs", etc.
-Example: ["🥛 2L Milk", "🍞 1 Loaf Bread", "🥚 1 Dozen Eggs"]`;
-
   try {
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
-    const cleaned = response.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    return JSON.parse(cleaned);
+    // Use AI service for rate limiting and fallbacks
+    const result = await aiService.formatGrocery(text);
+    return result.items || [text];
   } catch (err) {
     console.error("[Gemini Grocery] Failed to format:", err);
-    return [text];
+    // Simple fallback - split by common separators and add basic emojis
+    const items = text.split(/[,;]/).map(item => item.trim()).filter(item => item);
+    return items.map(item => {
+      if (item.toLowerCase().includes("milk")) return `🥛 ${item}`;
+      if (item.toLowerCase().includes("bread")) return `🍞 ${item}`;
+      if (item.toLowerCase().includes("egg")) return `🥚 ${item}`;
+      if (item.toLowerCase().includes("tomato")) return `🍅 ${item}`;
+      if (item.toLowerCase().includes("onion")) return `🧅 ${item}`;
+      return `🛒 ${item}`;
+    });
   }
 }
 

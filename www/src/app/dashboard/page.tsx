@@ -100,8 +100,7 @@ export default function DashboardPage() {
     if (!user) return;
     const newStatus = currentStatus === "completed" ? "pending" : "completed";
     try {
-      const today = getTodayString();
-      await updateTaskStatus(today, taskId, newStatus);
+      await updateTaskStatus(taskId, newStatus);
       if (newStatus === "completed") {
         playBeep();
         toast.success(t("taskCompleted"));
@@ -115,8 +114,7 @@ export default function DashboardPage() {
   const handleDeleteTask = async (taskId: string) => {
     if (!user) return;
     try {
-      const today = getTodayString();
-      await deleteTask(today, taskId);
+      await deleteTask(taskId);
       toast.success(t("taskDeleted"));
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -322,7 +320,7 @@ export default function DashboardPage() {
       </div>
 
       {showEditDialog && (
-        <EditDailyTasksDialog onClose={() => setShowEditDialog(false)} />
+        <EditDailyTasksDialog open={true} onClose={() => setShowEditDialog(false)} />
       )}
     </div>
   );

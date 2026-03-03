@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@firebasegen/default-connector': link:dataconnect-generated/js/default-connector
+
 importers:
 
   .:

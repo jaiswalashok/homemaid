@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Mail,
@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 
 type AuthMode = "login" | "signup" | "verify";
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, signIn, signUp, signInWithGoogle, signInWithApple } = useAuth();
@@ -390,5 +390,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><Loader2 className="animate-spin" /></div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

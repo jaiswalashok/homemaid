@@ -1,12 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
   trailingSlash: true,
   images: {
     unoptimized: true
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://homemaid.jaiswals.live' : undefined,
+  // Remove assetPrefix to let Vercel handle it automatically
   basePath: process.env.NODE_ENV === 'production' ? '' : undefined,
 };
 
