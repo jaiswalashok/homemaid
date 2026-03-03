@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "HomeMaid",
+    "slug": "homemaid",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#faf7f5"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jaiswals.homemaid",
+      "infoPlist": {
+        "NSCameraUsageDescription": "HomeMaid needs access to your camera to scan receipts and take photos.",
+        "NSPhotoLibraryUsageDescription": "HomeMaid needs access to your photo library to upload recipe images and receipts.",
+        "NSMicrophoneUsageDescription": "HomeMaid needs access to your microphone for voice input."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#faf7f5",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "package": "com.jaiswals.homemaid",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "RECORD_AUDIO"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow HomeMaid to access your camera to scan receipts."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow HomeMaid to access your photos.",
+          "savePhotosPermission": "Allow HomeMaid to save photos."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow HomeMaid to access your photos to upload recipe images and receipts."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "homemaid-f7a6e"
+      }
+    }
+  }
+}
