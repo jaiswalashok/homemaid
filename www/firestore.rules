@@ -1,20 +1,50 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /recipes/{document=**} {
-      allow read, write: if request.auth != null;
+    // Users can read and write their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
-    match /tasks/{document=**} {
-      allow read, write: if request.auth != null;
+    
+    // Master Task Templates - read-only for all authenticated users, write access for seeding
+    match /masterTaskTemplates/{templateId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null; // Temporarily allow seeding
     }
-    match /dailyTaskTemplates/{document=**} {
-      allow read, write: if request.auth != null;
+    
+    // Recipes - users can ONLY read and write their own recipes
+    match /recipes/{recipeId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
     }
-    match /expenses/{document=**} {
-      allow read, write: if request.auth != null;
+    
+    // Tasks - users can ONLY read and write their own tasks
+    match /tasks/{taskId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
     }
-    match /groceries/{document=**} {
-      allow read, write: if request.auth != null;
+    
+    // Daily task templates - users can ONLY read and write their own templates
+    match /dailyTaskTemplates/{templateId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // Expenses - users can ONLY read and write their own expenses
+    match /expenses/{expenseId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // Groceries - users can ONLY read and write their own grocery lists
+    match /groceries/{groceryId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
     }
   }
 }

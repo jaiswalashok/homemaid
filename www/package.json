@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "next lint",
+    "seed:templates": "cd scripts && pnpm run seed:templates",
     "tunnel": "node scripts/ngrok-telegram.mjs"
   },
   "dependencies": {

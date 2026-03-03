@@ -6,6 +6,7 @@ import {
   doc,
   getDocs,
   query,
+  where,
   orderBy,
   serverTimestamp,
   Timestamp,
@@ -61,13 +62,40 @@ function normalizeRecipe(raw: any): Omit<Recipe, "id"> {
 }
 
 export async function getAllRecipes(): Promise<Recipe[]> {
-  await requireAuth();
-  const q = query(collection(db, COLLECTION), orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({
-    id: d.id,
-    ...normalizeRecipe(d.data()),
-  })) as Recipe[];
+  console.log("[getAllRecipes] Starting to fetch recipes...");
+  try {
+    const user = await requireAuth();
+    console.log("[getAllRecipes] Auth successful, user:", user.uid);
+    
+    const q = query(
+      collection(db, COLLECTION),
+      where("userId", "==", user.uid),
+      orderBy("createdAt", "desc")
+    );
+    console.log("[getAllRecipes] Query created, executing...");
+    
+    const snapshot = await getDocs(q);
+    console.log("[getAllRecipes] Query successful, docs count:", snapshot.docs.length);
+    
+    const recipes = snapshot.docs.map((d) => {
+      const data = d.data();
+      console.log("[getAllRecipes] Recipe data:", { id: d.id, userId: data.userId, hasData: !!data });
+      return {
+        id: d.id,
+        ...normalizeRecipe(data),
+      };
+    }) as Recipe[];
+    
+    console.log("[getAllRecipes] Successfully processed", recipes.length, "recipes");
+    return recipes;
+  } catch (error: any) {
+    console.error("[getAllRecipes] Error details:", {
+      code: error.code,
+      message: error.message,
+      stack: error.stack,
+    });
+    throw error;
+  }
 }
 
 export async function addRecipe(

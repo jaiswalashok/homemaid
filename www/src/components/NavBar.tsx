@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UtensilsCrossed, ListChecks, Receipt, ShoppingCart, Settings } from "lucide-react";
+import { UtensilsCrossed, ListChecks, Receipt, ShoppingCart, Settings, Copy } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
 import { useAuth } from "@/lib/auth-context";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const NAV_ITEMS = [
+  { href: "/templates", icon: Copy, labelEn: "Templates", labelHi: "टेम्पलेट्स" },
   { href: "/recipes", icon: UtensilsCrossed, labelEn: "Recipes", labelHi: "रेसिपी" },
-  { href: "/", icon: ListChecks, labelEn: "Tasks", labelHi: "कार्य" },
+  { href: "/tasks", icon: ListChecks, labelEn: "Tasks", labelHi: "कार्य" },
   { href: "/expenses", icon: Receipt, labelEn: "Expenses", labelHi: "खर्च" },
   { href: "/grocery", icon: ShoppingCart, labelEn: "Grocery", labelHi: "किराना" },
 ];

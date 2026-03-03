@@ -1,10 +1,11 @@
 import {
   collection,
   addDoc,
+  getDocs,
+  getDoc,
+  doc,
   updateDoc,
   deleteDoc,
-  doc,
-  getDocs,
   query,
   where,
   serverTimestamp,
@@ -36,14 +37,12 @@ export interface Task {
 
 const COLLECTION = "tasks";
 
-async function requireAuth() {
+export async function requireAuth() {
   let user = auth.currentUser;
   if (!user) {
     user = await ensureAuth();
   }
-  if (!user) {
-    throw new Error("You must be signed in.");
-  }
+  if (!user) throw new Error("Authentication required");
   return user;
 }
 
@@ -117,12 +116,18 @@ export interface DailyTaskTemplate {
   dayOfMonth?: number; // 1-31 (for monthly)
   isRecipe?: boolean; // true if this template is from a recipe
   recipeId?: string; // linked recipe ID
+  userId?: string;
+  category?: string;
+  description?: string;
 }
 
-// Get all daily task templates from Firestore
+// Get all daily task templates for current user
 export async function getDailyTaskTemplates(): Promise<DailyTaskTemplate[]> {
-  await requireAuth();
-  const q = query(collection(db, TEMPLATES_COLLECTION));
+  const user = await requireAuth();
+  const q = query(
+    collection(db, TEMPLATES_COLLECTION),
+    where("userId", "==", user.uid)
+  );
   const snapshot = await getDocs(q);
   const templates = snapshot.docs.map((d) => ({
     id: d.id,
@@ -131,23 +136,120 @@ export async function getDailyTaskTemplates(): Promise<DailyTaskTemplate[]> {
   return templates.sort((a, b) => a.order - b.order);
 }
 
+// Get all master task templates (shared across all users)
+export async function getMasterTaskTemplates(): Promise<DailyTaskTemplate[]> {
+  await requireAuth();
+  const q = query(collection(db, "masterTaskTemplates"));
+  const snapshot = await getDocs(q);
+  const templates = snapshot.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+  })) as DailyTaskTemplate[];
+  return templates.sort((a, b) => a.order - b.order);
+}
+
+// Copy a master template to user's personal templates
+export async function copyMasterTemplateToUser(masterTemplateId: string): Promise<string> {
+  const user = await requireAuth();
+  
+  // Get the master template
+  const masterDoc = await getDoc(doc(db, "masterTaskTemplates", masterTemplateId));
+  if (!masterDoc.exists()) {
+    throw new Error("Master template not found");
+  }
+  
+  const masterData = masterDoc.data();
+  
+  // Create user template
+  const userTemplateRef = await addDoc(collection(db, TEMPLATES_COLLECTION), {
+    title: masterData.title,
+    order: masterData.order,
+    enabled: masterData.enabled,
+    userId: user.uid,
+    recurrence: masterData.recurrence || "daily",
+    ...(masterData.dayOfWeek !== undefined && { dayOfWeek: masterData.dayOfWeek }),
+    ...(masterData.dayOfMonth !== undefined && { dayOfMonth: masterData.dayOfMonth }),
+    category: masterData.category,
+    description: masterData.description,
+  });
+  
+  return userTemplateRef.id;
+}
+
 // Seed the templates collection with defaults (run once)
 export async function seedDailyTaskTemplates(): Promise<boolean> {
-  await requireAuth();
+  console.log("[seedDailyTaskTemplates] Starting template seeding...");
+  const user = await requireAuth();
+  console.log("[seedDailyTaskTemplates] Authenticated user:", user.uid);
   const existing = await getDailyTaskTemplates();
-  if (existing.length > 0) return false; // already seeded
+  console.log("[seedDailyTaskTemplates] Found", existing.length, "existing templates");
+  if (existing.length > 0) {
+    console.log("[seedDailyTaskTemplates] Templates already exist, skipping seeding");
+    return false; // already seeded
+  }
 
   const batch = writeBatch(db);
+  
+  // Daily tasks
   DEFAULT_DAILY_TASKS.forEach((title, idx) => {
     const docRef = doc(collection(db, TEMPLATES_COLLECTION));
     batch.set(docRef, {
       title,
       order: idx + 1,
       enabled: true,
+      userId: user.uid,
+      recurrence: "daily",
     });
   });
+  
+  // Weekly tasks (run on Mondays by default)
+  const weeklyTasks = [
+    { title: "Deep clean refrigerator", dayOfWeek: 1 }, // Monday
+    { title: "Change bed sheets", dayOfWeek: 1 }, // Monday
+    { title: "Clean bathroom thoroughly", dayOfWeek: 2 }, // Tuesday
+    { title: "Vacuum under furniture", dayOfWeek: 3 }, // Wednesday
+    { title: "Clean windows and mirrors", dayOfWeek: 4 }, // Thursday
+    { title: "Organize pantry and cabinets", dayOfWeek: 5 }, // Friday
+    { title: "Meal prep for the week", dayOfWeek: 0 }, // Sunday
+  ];
+  
+  weeklyTasks.forEach((task, idx) => {
+    const docRef = doc(collection(db, TEMPLATES_COLLECTION));
+    batch.set(docRef, {
+      title: task.title,
+      order: DEFAULT_DAILY_TASKS.length + idx + 1,
+      enabled: true,
+      userId: user.uid,
+      recurrence: "weekly",
+      dayOfWeek: task.dayOfWeek,
+    });
+  });
+  
+  // Monthly tasks (run on 1st of month by default)
+  const monthlyTasks = [
+    { title: "Deep clean oven and stove", dayOfMonth: 1 },
+    { title: "Clean ceiling fans and light fixtures", dayOfMonth: 5 },
+    { title: "Organize closets and wardrobes", dayOfMonth: 10 },
+    { title: "Check and replace air filters", dayOfMonth: 15 },
+    { title: "Clean behind appliances", dayOfMonth: 20 },
+    { title: "Review and pay monthly bills", dayOfMonth: 25 },
+  ];
+  
+  monthlyTasks.forEach((task, idx) => {
+    const docRef = doc(collection(db, TEMPLATES_COLLECTION));
+    batch.set(docRef, {
+      title: task.title,
+      order: DEFAULT_DAILY_TASKS.length + weeklyTasks.length + idx + 1,
+      enabled: true,
+      userId: user.uid,
+      recurrence: "monthly",
+      dayOfMonth: task.dayOfMonth,
+    });
+  });
+  
   await batch.commit();
-  console.log("[Tasks] Seeded", DEFAULT_DAILY_TASKS.length, "daily task templates");
+  const totalTasks = DEFAULT_DAILY_TASKS.length + weeklyTasks.length + monthlyTasks.length;
+  console.log("[seedDailyTaskTemplates] Successfully seeded", totalTasks, "task templates (daily, weekly, monthly)");
   return true;
 }
 
@@ -162,13 +264,14 @@ export async function addDailyTaskTemplate(
     recipeId?: string;
   }
 ): Promise<string> {
-  await requireAuth();
+  const user = await requireAuth();
   const templates = await getDailyTaskTemplates();
   const maxOrder = templates.length > 0 ? Math.max(...templates.map((t) => t.order)) : 0;
   const docRef = await addDoc(collection(db, TEMPLATES_COLLECTION), {
     title,
     order: maxOrder + 1,
     enabled: true,
+    userId: user.uid,
     recurrence: options?.recurrence || "daily",
     ...(options?.dayOfWeek !== undefined && { dayOfWeek: options.dayOfWeek }),
     ...(options?.dayOfMonth !== undefined && { dayOfMonth: options.dayOfMonth }),
@@ -194,11 +297,12 @@ export async function deleteDailyTaskTemplate(id: string): Promise<void> {
   await deleteDoc(docRef);
 }
 
-// Get all tasks for a specific date
+// Get all tasks for a specific date (filtered by current user)
 export async function getTasksForDate(date: string): Promise<Task[]> {
-  await requireAuth();
+  const user = await requireAuth();
   const q = query(
     collection(db, COLLECTION),
+    where("userId", "==", user.uid),
     where("date", "==", date)
   );
   const snapshot = await getDocs(q);
@@ -210,13 +314,15 @@ export async function getTasksForDate(date: string): Promise<Task[]> {
   return tasks.sort((a, b) => a.order - b.order);
 }
 
-// Real-time listener for tasks on a specific date
+// Real-time listener for tasks on a specific date (filtered by current user)
 export function onTasksForDate(
   date: string,
+  userId: string,
   callback: (tasks: Task[]) => void
 ): Unsubscribe {
   const q = query(
     collection(db, COLLECTION),
+    where("userId", "==", userId),
     where("date", "==", date)
   );
   return onSnapshot(q, (snapshot) => {
@@ -234,12 +340,13 @@ export function onTasksForDate(
   });
 }
 
-// Get incomplete non-daily tasks from previous days (carry over)
+// Get incomplete non-daily tasks from previous days (carry over) for current user
 // Uses simple query + client-side filtering to avoid composite index
 export async function getCarryOverTasks(today: string): Promise<Task[]> {
-  await requireAuth();
+  const user = await requireAuth();
   const q = query(
     collection(db, COLLECTION),
+    where("userId", "==", user.uid),
     where("isDaily", "==", false)
   );
   const snapshot = await getDocs(q);
@@ -285,23 +392,53 @@ function shouldTemplateRunOnDate(tmpl: DailyTaskTemplate, date: string): boolean
 
 // Seed recurring tasks for today from templates (if they don't exist yet)
 export async function seedDailyTasks(date: string): Promise<boolean> {
+  console.log("[seedDailyTasks] Starting for date:", date);
   const user = await requireAuth();
+  console.log("[seedDailyTasks] Authenticated user:", user.uid);
   
   // Check if daily tasks already exist for this date
+  console.log("[seedDailyTasks] Checking existing tasks...");
   const existing = await getTasksForDate(date);
+  console.log("[seedDailyTasks] Found", existing.length, "existing tasks:", existing);
   const hasDailyTasks = existing.some((t) => t.isDaily);
-  if (hasDailyTasks) return false; // already seeded
+  if (hasDailyTasks) {
+    console.log("[seedDailyTasks] Daily tasks already exist, skipping seeding");
+    return false; // already seeded
+  }
+  
+  // Additional check: if we have any tasks for today, don't seed
+  if (existing.length > 0) {
+    console.log("[seedDailyTasks] Tasks already exist for today, skipping seeding");
+    return false;
+  }
 
   // First ensure templates exist
+  console.log("[seedDailyTasks] Ensuring templates exist...");
   await seedDailyTaskTemplates();
 
   // Get enabled templates that should run today
+  console.log("[seedDailyTasks] Getting templates for today...");
   const templates = await getDailyTaskTemplates();
+  console.log("[seedDailyTasks] Found", templates.length, "templates:", templates);
   const eligible = templates.filter((t) => t.enabled && shouldTemplateRunOnDate(t, date));
-  if (eligible.length === 0) return false;
+  console.log("[seedDailyTasks] Found", eligible.length, "eligible templates for today:", eligible);
+  if (eligible.length === 0) {
+    console.log("[seedDailyTasks] No eligible templates for today");
+    return false;
+  }
+  
+  // Filter out templates that already have tasks with the same title for today
+  const existingTitles = new Set(existing.map(t => t.title));
+  const filteredEligible = eligible.filter(tmpl => !existingTitles.has(tmpl.title));
+  console.log("[seedDailyTasks] After filtering existing titles:", filteredEligible.length, "tasks to create");
+  
+  if (filteredEligible.length === 0) {
+    console.log("[seedDailyTasks] All eligible tasks already exist for today");
+    return false;
+  }
 
   const batch = writeBatch(db);
-  eligible.forEach((tmpl, idx) => {
+  filteredEligible.forEach((tmpl, idx) => {
     const docRef = doc(collection(db, COLLECTION));
     batch.set(docRef, {
       title: tmpl.isRecipe ? `🍳 ${tmpl.title}` : tmpl.title,
@@ -318,7 +455,9 @@ export async function seedDailyTasks(date: string): Promise<boolean> {
       userId: user.uid,
     });
   });
+  console.log("[seedDailyTasks] Committing batch with", filteredEligible.length, "tasks");
   await batch.commit();
+  console.log("[seedDailyTasks] Successfully seeded", filteredEligible.length, "daily tasks for", date);
   return true;
 }
 

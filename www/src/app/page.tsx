@@ -19,7 +19,7 @@ export default function HomePage() {
     if (!loading) {
       clearTimeout(fallbackTimer);
       if (user) {
-        router.push('/dashboard');
+        router.push('/tasks');
       } else {
         router.push('/landing');
       }
