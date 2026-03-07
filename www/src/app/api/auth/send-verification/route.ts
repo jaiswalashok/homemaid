@@ -67,14 +67,14 @@ export async function POST(req: NextRequest) {
 
     // Send verification email via Resend
     const { error } = await resend.emails.send({
-      from: "HomeBuddy <noreply@homebuddy.app>",
+      from: "HomeMaid <ashok+homemaid@jaiswals.live>",
       to: [email],
-      subject: "Your HomeBuddy Verification Code 🔐",
+      subject: "Your HomeMaid Verification Code 🔐",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <span style="font-size: 48px;">🍲</span>
-            <h1 style="color: #ea580c; margin: 10px 0 0;">HomeBuddy</h1>
+            <h1 style="color: #ea580c; margin: 10px 0 0;">HomeMaid</h1>
           </div>
           <div style="background: #fff7ed; padding: 30px; border-radius: 12px; text-align: center;">
             <h2 style="color: #333; margin: 0 0 10px;">Your Verification Code</h2>
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
             </p>
           </div>
           <div style="text-align: center; color: #999; font-size: 12px; margin-top: 20px;">
-            <p>© 2026 HomeBuddy. All rights reserved.</p>
+            <p>© 2026 HomeMaid. All rights reserved.</p>
           </div>
         </div>
       `,

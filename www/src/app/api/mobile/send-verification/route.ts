@@ -32,21 +32,21 @@ export async function POST(req: NextRequest) {
     // Send email using Resend
     try {
       const { data, error } = await resend.emails.send({
-        from: 'HomeBuddy <noreply@homebuddy.app>',
+        from: 'HomeMaid <ashok+homemaid@jaiswals.live>',
         to: [email],
-        subject: 'Verify your HomeBuddy account',
+        subject: 'Verify your HomeMaid account',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #4A90E2; margin: 0;">HomeBuddy</h1>
-              <p style="color: #666; margin: 5px 0;">Your Smart Home Assistant</p>
+              <h1 style="color: #4A90E2; margin: 0;">HomeMaid</h1>
+              <p style="color: #666; margin: 5px 0;">Your Smart Home Management</p>
             </div>
             
             <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin-bottom: 20px;">
               <h2 style="color: #333; margin: 0 0 10px 0;">Verify Your Email</h2>
               <p style="color: #666; margin: 0 0 20px 0;">
                 Hi ${name},<br>
-                Thanks for signing up for HomeBuddy! Please use the verification code below to complete your registration.
+                Thanks for signing up for HomeMaid! Please use the verification code below to complete your registration.
               </p>
               
               <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
             
             <div style="text-align: center; color: #999; font-size: 12px;">
               <p>If you didn't request this verification, please ignore this email.</p>
-              <p>© 2026 HomeBuddy. All rights reserved.</p>
+              <p>© 2026 HomeMaid. All rights reserved.</p>
             </div>
           </div>
         `,

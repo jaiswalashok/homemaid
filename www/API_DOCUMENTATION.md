@@ -1,4 +1,4 @@
-# HomeBuddy API Documentation
+# HomeMaid API Documentation
 
 **Base URL**: `https://annapurna-eight.vercel.app` (or your deployed URL)
 

@@ -89,7 +89,7 @@ function LoginContent() {
         body: JSON.stringify({ email, name: displayName }),
       }).catch(() => {}); // fire and forget
 
-      toast.success("Account created! Welcome to HomeBuddy!");
+      toast.success("Account created! Welcome to HomeMaid!");
       router.push("/");
     } catch (err: any) {
       toast.error(err.message || "Failed to create account");
@@ -155,7 +155,7 @@ function LoginContent() {
         <div className="text-center mb-8">
           <a href="/landing" className="inline-flex items-center gap-2 mb-6">
             <span className="text-4xl">🍲</span>
-            <span className="text-2xl font-bold text-gray-900">HomeBuddy</span>
+            <span className="text-2xl font-bold text-gray-900">HomeMaid</span>
           </a>
           <h1 className="text-2xl font-bold text-gray-900">
             {mode === "verify"
@@ -169,7 +169,7 @@ function LoginContent() {
               ? `We sent a 4-digit code to ${email}`
               : mode === "signup"
               ? "Start managing your home with AI"
-              : "Sign in to your HomeBuddy account"}
+              : "Sign in to your HomeMaid account"}
           </p>
         </div>
 

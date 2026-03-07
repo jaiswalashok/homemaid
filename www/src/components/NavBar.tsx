@@ -28,7 +28,7 @@ export default function NavBar() {
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
             <span className="text-2xl">🍲</span>
             <span className="text-lg font-bold text-white tracking-tight hidden sm:block">
-              {language === "Hindi" ? "होमबडी" : "HomeBuddy"}
+              {language === "Hindi" ? "होमबडी" : "HomeMaid"}
             </span>
           </Link>
 
